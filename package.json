@@ -1,0 +1,18 @@
+{
+  "name": "quickblog",
+  "version": "1.0.0",
+  "description": "This is backend for blog website which user can come create account and post their blogs and other users can see and react with comment and like. ",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon index.js"
+  },
+  "author": "Dhanesh Kumar",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoos": "^0.0.1-security",
+    "nodemon": "^3.0.1"
+  }
+}
