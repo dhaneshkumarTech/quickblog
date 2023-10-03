@@ -24,7 +24,7 @@ const userSchema = new Schema(
         token: {
             type: String
         }
-    }
+    }   
 )
 
 export default model('User', userSchema) 
