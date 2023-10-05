@@ -6,7 +6,7 @@ const likeSchema = new Schema({
         ref: "User",
         required: true,
     },
-    blogIdd: {
+    blogId: {
         type: Schema.Types.ObjectId,
         ref: "Blog",
         required: true

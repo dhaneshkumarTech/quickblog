@@ -14,10 +14,14 @@ const blogSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'User',
             required: true,
+        },
+        isDeleted: {
+            type: Boolean,
+            default: false
         }
     }, {
     timestamps: true,
-    }
+}
 )
 
 export default model("Blog", blogSchema);

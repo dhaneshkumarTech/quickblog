@@ -1,33 +1,26 @@
 //const router = require('express').Router()
 import express from 'express'
 const router = express.Router()
-import { register, login, emailVerification, postBlog, addComment, likeBlog, getBlogs, userBlogs, getBlogComments, getBlogLike, updatePassword, deleteBlog, updateBlog } from './controller/blogs.js'
 
+import { register, login, postBlog, addComment, likeBlog, getBlogs, userBlogs, updatePassword, deleteBlog } from './controller/blogs.js'
+import { auth } from './middleware/auth.middleware.js'
 
 //post requests
-router.post('/auth/register', register);
-router.post('/auth/login', login);
-router.post('/emailVerification', emailVerification);
-router.post('/blog', postBlog);
-router.post('/blog/:blogid/comment', addComment);
-router.post('/blog/:blogid/like', likeBlog);
+router.post('/register', register)
+router.post('/login', login)
+router.post('/blogs', auth, postBlog)
+router.post('/blog/:blogId/comment', auth, addComment)
+router.post('/blog/:blogId/like', auth, likeBlog)
 
 //get requests
-router.get('/blogs', getBlogs);
-router.get('/blogs/:userID', userBlogs);
-router.get('/blogs/:blogID/comments', getBlogComments)
-router.get('/blog/:blogid/like', getBlogLike);
+router.get('/blogs', auth, getBlogs)
+router.get('/blogs/:userId', auth, userBlogs);
+
 
 //patch requests
-router.patch('/auth/login/updatepassword/:userID', updatePassword)
-
+router.patch('/updatepassword', auth, updatePassword)
 
 //delete requests
-router.delete('/blogs/:blogID', deleteBlog);
-
-//update request
-router.put('/blogs/:blogsID', updateBlog);
-
-
+router.delete('/blogs/:blogId', auth, deleteBlog);
 
 export default router;
