@@ -1,19 +1,18 @@
 
 import User from '../model/userSchema.js'
-import { validateEmail } from '../validation/inputValidation.js'
+import validation from '../validation/inputValidation.js'
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
 //register user
 const register = async (req, res) => {
-
     try {
         const { name, username, email, password } = req.body;
 
         if (!(name && username && email && password)) {
             res.status(400).json({ message: "All inputs are required. Fill data." })
         }
-        if (!(validateEmail(email))) {
+        if (!(validation.validateEmail(email))) {
             res.status(400).json({ message: "email is not valid." })
         }
         const oldUser = await User.findOne({ email: email });
@@ -47,7 +46,7 @@ const login = async (req, res) => {
         if (!(email && password)) {
             res.status(400).json({ message: "Provide Login Credentials" })
         }
-        if (!(validateEmail(email))) {
+        if (!(validation.validateEmail(email))) {
             res.status(400).json({ message: "email is not valid." })
         }
         else {
@@ -77,11 +76,9 @@ const login = async (req, res) => {
 
 }
 
-
-
 const updatePassword = async (req, res) => {
     try {
-        const { currentPassword, newPassword } = req.body
+        const {currentPassword, newPassword } = req.body
         if (!(currentPassword && newPassword)) {
             res.status(400).send({ err: "Both current and new passwords are required" })
         }
@@ -99,5 +96,4 @@ const updatePassword = async (req, res) => {
     }
 }
 
-
-export default {register, login, updatePassword}
+export default { register, login, updatePassword }
