@@ -12,25 +12,27 @@ const register = async (req, res) => {
         if (!(name && username && email && password)) {
             res.status(400).json({ message: "All inputs are required. Fill data." })
         }
-        if (!(validation.validateEmail(email))) {
+        if (!(validation.isEmailValid(email))) {
             res.status(400).json({ message: "email is not valid." })
         }
-        const oldUser = await User.findOne({ email: email });
-        if (oldUser) {
-            res.json({ message: "User already exist with this email." })
-        }
         else {
-            const encryptPassword = await bcryptjs.hash(password, 8);
-            const newUser = new User(
-                {
-                    name: name,
-                    username: username,
-                    email: email,
-                    password: encryptPassword
-                }
-            )
-            await newUser.save();
-            res.status(201).json({ message: "User Registered" })
+            const oldUser = await User.findOne({ email: email });
+            if (oldUser) {
+                res.json({ message: "User already exist with this email." })
+            }
+            else {
+                const encryptPassword = await bcryptjs.hash(password, 8);
+                const newUser = new User(
+                    {
+                        name: name,
+                        username: username,
+                        email: email,
+                        password: encryptPassword
+                    }
+                )
+                await newUser.save();
+                res.status(201).json({ message: "User Registered" })
+            }
         }
     }
 
@@ -46,7 +48,7 @@ const login = async (req, res) => {
         if (!(email && password)) {
             res.status(400).json({ message: "Provide Login Credentials" })
         }
-        if (!(validation.validateEmail(email))) {
+        if (!(validation.isEmailValid(email))) {
             res.status(400).json({ message: "email is not valid." })
         }
         else {
@@ -71,6 +73,7 @@ const login = async (req, res) => {
 
     }
     catch (err) {
+        console.log("Error: ", err)
         res.status(400).send(err)
     }
 
@@ -78,7 +81,7 @@ const login = async (req, res) => {
 
 const updatePassword = async (req, res) => {
     try {
-        const {currentPassword, newPassword } = req.body
+        const { currentPassword, newPassword } = req.body
         if (!(currentPassword && newPassword)) {
             res.status(400).send({ err: "Both current and new passwords are required" })
         }

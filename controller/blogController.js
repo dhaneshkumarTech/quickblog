@@ -76,15 +76,16 @@ const likeBlog = async (req, res) => {
 const getBlogs = async (req, res) => {
     try {
         const allBlogs = await Blog.find({ isDeleted: false })
-            .populate('userId')
+            .populate('userId', 'name')
+
+            console.log(allBlogs)
 
         if (!allBlogs || !allBlogs.length) {
             return res.json({ error: "No blogs available" });
         }
 
         const blogs = allBlogs.map(blog => ({
-            // author: blog.userId.name,
-            title: blog.title,
+            author: blog.userId ? blog.userId.name : "Unknown Author",
             content: blog.content
         }));
 
