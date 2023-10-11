@@ -9,7 +9,8 @@ const postBlog = async (req, res) => {
         const newBlog = new Blog({
             title: req.body.title,
             content: req.body.content,
-            userId: req.headers.userId
+            userId: req.headers.userId,
+            isDeleted: false
         })
         await newBlog.save();
         res.status(200).json({ message: "Blog posted" })
@@ -38,7 +39,7 @@ const addComment = async (req, res) => {
                 })
 
                 await comment.save()
-                res.status(200).send({ message: "Commneted sucessfully." })
+                res.status(200).send({ message: "Commented sucessfully." })
             }
         }
     }
@@ -78,14 +79,13 @@ const getBlogs = async (req, res) => {
         const allBlogs = await Blog.find({ isDeleted: false })
             .populate('userId', 'name')
 
-            console.log(allBlogs)
-
         if (!allBlogs || !allBlogs.length) {
             return res.json({ error: "No blogs available" });
         }
 
         const blogs = allBlogs.map(blog => ({
-            author: blog.userId ? blog.userId.name : "Unknown Author",
+            author: blog.userId.name,
+            title: blog.title,
             content: blog.content
         }));
 

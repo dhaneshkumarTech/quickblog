@@ -15,4 +15,5 @@ const jwtVerify = async (payload, done) => {
 }
 const Strategy = new JwtStrategy(jwtOptions, jwtVerify);
 
+
 export default (passport) => { passport.use(Strategy) }
