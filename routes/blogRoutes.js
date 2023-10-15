@@ -1,9 +1,10 @@
 //const router = require('express').Router()
-import express from 'express'
-const router = express.Router()
+import Express from 'express'
+const router = Express.Router()
 import blogController from '../controller/blogController.js'
 import middleware from '../middleware/auth.js'
 import validator from '../validation/validator.js'
+import permission from '../permissions/routeAccess.js'
 
 
 router.post
@@ -11,6 +12,7 @@ router.post
         '/blogs',
         validator.postBlog,
         middleware.auth,
+        permission.isCreater,
         blogController.postBlog
     )
 

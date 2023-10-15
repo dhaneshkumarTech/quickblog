@@ -9,7 +9,7 @@ const postBlog = async (req, res) => {
         const newBlog = new Blog({
             title: req.body.title,
             content: req.body.content,
-            userId: req.headers.userId,
+            userId: req.user._id,
             isDeleted: false
         })
         await newBlog.save();
@@ -27,14 +27,14 @@ const addComment = async (req, res) => {
             res.json({ error: "Blog Not Found." })
         }
         else {
-            const userComment = await Comment.findOne({ userId: req.headers.userId, blogId: blog._id })
+            const userComment = await Comment.findOne({ userId: req.user._id, blogId: blog._id })
             if (userComment) {
                 res.json({ error: "Already commmented on this blog" })
             }
             else {
                 const comment = new Comment({
                     content: req.body.content,
-                    userId: req.headers.userId,
+                    userId: req.user._id,
                     blogId: req.params['blogId']
                 })
 
@@ -55,13 +55,13 @@ const likeBlog = async (req, res) => {
             res.json({ error: "Blog Not Found." })
         }
         else {
-            const userLike = await Like.findOne({ userId: req.headers.userId, blogId: blog._id })
+            const userLike = await Like.findOne({ userId: req.user._id, blogId: blog._id })
             if (userLike) {
                 res.json({ error: "Already Liked this blog" })
             }
             else {
                 const like = new Like({
-                    userId: req.headers.userId,
+                    userId: req.user._id,
                     blogId: req.params['blogId']
                 })
 
@@ -78,7 +78,6 @@ const getBlogs = async (req, res) => {
     try {
         const allBlogs = await Blog.find({ isDeleted: false })
             .populate('userId', 'name')
-
         if (!allBlogs || !allBlogs.length) {
             return res.json({ error: "No blogs available" });
         }
@@ -102,7 +101,7 @@ const userBlogs = async (req, res) => {
         const userId = req.params.userId;
         const userBlogs = await Blog.aggregate([
             {
-                $match: { userId: new mongoose.Types.ObjectId(userId) }
+                $match: { userId: new mongoose.Types.ObjectId(userId), isDeleted: false }
             },
             {
                 $lookup: {
@@ -145,7 +144,6 @@ const userBlogs = async (req, res) => {
             },
             {
                 $project: {
-                    _id: 1,
                     title: 1,
                     content: 1,
                     comments: 1,
@@ -165,18 +163,16 @@ const userBlogs = async (req, res) => {
     }
 }
 
-
+// there is bug in this code
 const deleteBlog = async (req, res) => {
     try {
-        const blog = await Blog.findById(req.params['blogId'])
-        console.log(blog)
-        if (blog.isDeleted) {
-            res.status(404).send({ error: "Blog Not Found." })
+        const blog = await Blog.findOneAndUpdate({ _id: req.params['blogId'], userId: req.user._id, isDeleted: false }, { $set: { isDeleted: true } })
+
+        if (blog) {
+            res.status(200).send({ message: "Blog deleted." })
         }
         else {
-            blog.isDeleted = true
-            await blog.save()
-            res.status(200).send({ message: "Blog deleted." })
+            res.status(404).send({ error: "Blog Not Found." })
         }
     }
     catch (err) {

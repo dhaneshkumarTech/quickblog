@@ -2,6 +2,7 @@
 import User from '../model/userSchema.js'
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import user from '../joiSchema/user.js'
 
 //register user
 const register = async (req, res) => {
@@ -38,10 +39,13 @@ const login = async (req, res) => {
 
         const user = await User.findOne({ email });
 
-        if (user && await bcryptjs.compare(password, user.password)) {
+        if (user && bcryptjs.compare(password, user.password)) {
 
             const token = jwt.sign(
-                { _id: user._id },
+                {
+                    _id: user._id,
+                    role: user.role
+                },
                 process.env.JWT_SECRET,
                 {
                     expiresIn: process.env.JWT_EXPIRE_IN
@@ -55,7 +59,6 @@ const login = async (req, res) => {
         }
     }
     catch (err) {
-        console.log("Error: ", err)
         res.status(400).send(err)
     }
 
@@ -79,4 +82,20 @@ const updatePassword = async (req, res) => {
     }
 }
 
-export default { register, login, updatePassword }
+const getUser = async (req, res) => {
+    try {
+        const users = await User.find({ createrStatus: "Pending" })
+
+        if (!users) {
+            res.send({ error: "No user's request is pending" })
+        }
+        else {
+            res.send(users)
+        }
+    }
+    catch (err) {
+        res.send(err)
+    }
+}
+
+export default { register, login, updatePassword, getUser }
