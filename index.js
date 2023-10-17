@@ -1,9 +1,9 @@
 import express from 'express';
 import 'dotenv/config.js';
-import { connection as _connectDB } from './config/dbConfig.js'
-import userRoutes from './routes/userRoutes.js'
-import blogRoutes from './routes/blogRoutes.js';
-import admingRoutes from './routes/adminRoutes.js'
+import { connection as _connectDB } from './src/config/dbConfig.js'
+import userRoutes from './src/routes/userRoutes.js'
+import blogRoutes from './src/routes/blogRoutes.js';
+import admingRoutes from './src/routes/adminRoutes.js'
 import passport from 'passport';
 
 _connectDB();

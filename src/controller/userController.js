@@ -2,7 +2,6 @@
 import User from '../model/userSchema.js'
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import user from '../joiSchema/user.js'
 
 //register user
 const register = async (req, res) => {

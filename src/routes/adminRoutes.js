@@ -1,10 +1,10 @@
 import Express from 'express'
 const router = Express.Router()
 import midddleware from '../middleware/auth.js'
-import routeAccess from "../permissions/routeAccess.js";
+import routeAccess from "../utility/routePermissions/routeAccess.js";
 import userController from '../controller/userController.js'
 import adminController from "../controller/adminController.js";
-import validator from '../validation/validator.js';
+import validator from '../utility/validation/validator.js';
 
 router.get
     (

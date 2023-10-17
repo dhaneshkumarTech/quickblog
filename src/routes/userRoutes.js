@@ -2,16 +2,16 @@ import express from 'express'
 const router = express.Router()
 import userController from '../controller/userController.js'
 import adminController from '../controller/adminController.js'
-import validator from '../validation/validator.js'
+import validator from '../utility/validation/validator.js'
 import middleware from '../middleware/auth.js'
-import permission from '../permissions/routeAccess.js'
+import permission from '../utility/routePermissions/routeAccess.js'
 
 router.post
     (
         '/register',
         validator.signUp,
         userController.register
-    )   
+    )
 
 router.post
     (

@@ -3,8 +3,8 @@ import Express from 'express'
 const router = Express.Router()
 import blogController from '../controller/blogController.js'
 import middleware from '../middleware/auth.js'
-import validator from '../validation/validator.js'
-import permission from '../permissions/routeAccess.js'
+import validator from '../utility/validation/validator.js'
+import permission from '../utility/routePermissions/routeAccess.js'
 
 
 router.post
