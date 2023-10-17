@@ -1,5 +1,5 @@
-import user from '../../joiSchema/user.js';
-import blog from '../../joiSchema/blog.js';
+import user from '../joiSchema/user.js';
+import blog from '../joiSchema/blog.js';
 
 function validation(schema) {
     return (req, res, next) => {
