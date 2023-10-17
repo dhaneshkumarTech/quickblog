@@ -1,10 +1,6 @@
 # Node.js Quick Blog Backend
 
 ## Overview
-<<<<<<< HEAD
-
-=======
->>>>>>> 3d4c8ad3e07175c495def36d3f5b02e44d90e169
 This project is a Node.js Express application designed as a quick backend solution for a blogging platform. The project leverages MongoDB as its database, and provides JWT-based authentication using Passport. The app supports three types of users: Admin, Consumer, and Creator. Data models for User, Blog, Comment, and Like are defined using Mongoose. All routes are validated using Joi validation middleware.
 
 ## Technologies Used
@@ -38,29 +34,17 @@ This project is a Node.js Express application designed as a quick backend soluti
 ## Routes Overview
 
 ### Admin Routes (`adminRoutes.js`)
-<<<<<<< HEAD
-
-=======
->>>>>>> 3d4c8ad3e07175c495def36d3f5b02e44d90e169
 - Get all users
 - Update the status of all user requests
 - Update the status of a specific user request
 
 ### User Routes (`userRoutes.js`)
-<<<<<<< HEAD
-
-=======
->>>>>>> 3d4c8ad3e07175c495def36d3f5b02e44d90e169
 - Register a new user
 - Login
 - Update password
 - Update role to 'creater'
 
 ### Blog Routes (`blogRoutes.js`)
-<<<<<<< HEAD
-
-=======
->>>>>>> 3d4c8ad3e07175c495def36d3f5b02e44d90e169
 - Create a new blog
 - Add a comment to a blog
 - Like a blog
