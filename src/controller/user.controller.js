@@ -2,7 +2,7 @@
 import User from '../model/user.model.js'
 import service from '../service/user.service.js'
 import jwtToken from '../utility/token/jwt.token.js'
-import asyncHandler from '../../error/tryCatch.error.js'
+import asyncHandler from '../error/tryCatch.error.js'
 import bcryptjs from 'bcryptjs'
 
 

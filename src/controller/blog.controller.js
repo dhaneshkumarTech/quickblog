@@ -3,11 +3,10 @@ import Blog from '../model/blog.model.js'
 import service from '../service/blog.service.js'
 import Comment from '../model/comment.model.js'
 import Like from '../model/like.model.js'
-import asyncHandler from '../utility/error/tryCatch.error.js'
+import asyncHandler from '../error/tryCatch.error.js'
 import mongoose from 'mongoose'
 
 const postBlog = asyncHandler(async (req, res) => {
-
     const { title, content } = req.body
     const userId = req.user._id
     await service.createBlog(title, content, userId)

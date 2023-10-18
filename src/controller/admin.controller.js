@@ -1,6 +1,6 @@
 import User from '../model/user.model.js'
 import constant from '../constant/constant.js'
-import asyncHandler from '../utility/error/tryCatch.error.js'
+import asyncHandler from '../error/tryCatch.error.js'
 
 
 const createrRequest = asyncHandler(async (req, res) => {
