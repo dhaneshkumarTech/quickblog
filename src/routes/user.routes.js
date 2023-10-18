@@ -20,11 +20,11 @@ router.route('/login')
         userController.login
     )
 
-router.route('/updatepassword')
+router.route('/changepassword')
     .patch(
-        validator.updatePassword,
+        validator.changePassowrd,
         middleware.auth,
-        userController.updatePassword
+        userController.changePassowrd
     )
 
 router.route('/updaterole')

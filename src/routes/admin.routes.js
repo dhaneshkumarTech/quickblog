@@ -6,11 +6,11 @@ import userController from '../controller/user.controller.js'
 import adminController from "../controller/admin.controller.js";
 import validator from '../utility/validation/validator.validation.js';
 
-router.route('/get-users')
+router.route('/get-creater-request')
     .get(
         midddleware.auth,
         access.isAdmin,
-        userController.getUser
+        userController.getCreaterRequest
     )
 
 router.route('/update-user-status')

@@ -14,11 +14,11 @@ function validation(schema) {
 
 const signUp = validation(user.signupSchema);
 const login = validation(user.loginSchema);
-const updatePassword = validation(user.updatePasswordSchema);
+const changePassowrd = validation(user.changePasswordSchema);
 const requestStatus = validation(user.requestStatusSchema)
 
 
 const postBlog = validation(blog.postBlogSchema)
 const addComment = validation(blog.commentSchema)
 
-export default { signUp, login, updatePassword, requestStatus, postBlog, addComment }
+export default { signUp, login, changePassowrd, requestStatus, postBlog, addComment }

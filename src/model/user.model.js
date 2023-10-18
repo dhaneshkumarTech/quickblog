@@ -33,4 +33,13 @@ const userSchema = new Schema(
     }
 )
 
-export default model('User', userSchema) 
+userSchema.pre('save', async function (next) {
+    const existingUser = await this.constructor.findOne({ email: this.email });
+    if (existingUser) {
+        throw new Error('Email already in use');
+    }
+    next();
+});
+
+export default model('User', userSchema)
+
