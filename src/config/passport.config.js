@@ -1,5 +1,5 @@
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import User from '../model/userSchema.js';
+import User from '../model/user.model.js';
 
 export default (passport) => {
     const jwtOptions = {

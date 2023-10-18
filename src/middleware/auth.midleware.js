@@ -20,7 +20,7 @@
 
 
 import passport from 'passport'
-import usePassport from "../config/passport.js";
+import usePassport from "../config/passport.config.js";
 usePassport(passport);
 
 const auth = async (req, res, next) => {

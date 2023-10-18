@@ -1,7 +1,7 @@
 
-import Blog from '../model/blogSchema.js'
-import Comment from '../model/commentSchema.js'
-import Like from '../model/likeSchema.js'
+import Blog from '../model/blog.model.js'
+import Comment from '../model/comment.model.js'
+import Like from '../model/like.model.js'
 import mongoose from 'mongoose'
 
 const postBlog = async (req, res) => {

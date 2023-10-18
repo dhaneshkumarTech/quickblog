@@ -1,5 +1,5 @@
 
-import User from '../model/userSchema.js'
+import User from '../model/user.model.js'
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 

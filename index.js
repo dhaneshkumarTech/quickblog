@@ -1,9 +1,9 @@
 import express from 'express';
 import 'dotenv/config.js';
-import { connection as _connectDB } from './src/config/dbConfig.js'
-import userRoutes from './src/routes/userRoutes.js'
-import blogRoutes from './src/routes/blogRoutes.js';
-import admingRoutes from './src/routes/adminRoutes.js'
+import { connection as _connectDB } from './src/config/db.config.js'
+import userRoutes from './src/routes/user.routes.js'
+import blogRoutes from './src/routes/blog.routes.js';
+import admingRoutes from './src/routes/admin.routes.js'
 import passport from 'passport';
 
 _connectDB();
@@ -12,9 +12,9 @@ const app = express();
 
 
 app.use(express.json())
-app.use(userRoutes);
-app.use(blogRoutes)
-app.use(admingRoutes)
+app.use('/user', userRoutes);
+app.use('/blogs', blogRoutes)
+app.use('/admin', admingRoutes)
 app.use(passport.initialize());
 app.use((req, res, next) => {
     res.send({ error: 'Route Not Found' });

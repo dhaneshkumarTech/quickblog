@@ -1,4 +1,4 @@
-import User from '../model/userSchema.js'
+import User from '../model/user.model.js'
 import constant from '../constant/constant.js'
 
 const createrRequest = async (req, res) => {
