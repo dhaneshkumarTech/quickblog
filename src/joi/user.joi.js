@@ -21,11 +21,6 @@ const changePasswordSchema = Joi.object({
     newPassword: Joi.string().required()
 })
 
-const requestStatusSchema = Joi.object(
-    {
-        requestStatus: Joi.string().valid(...Object.values(constant.requestStatus)).required()
-    }
-)
 
 
-export default { signupSchema, loginSchema, changePasswordSchema, requestStatusSchema }
+export default { signupSchema, loginSchema, changePasswordSchema }

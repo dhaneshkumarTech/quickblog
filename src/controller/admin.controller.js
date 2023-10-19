@@ -1,49 +1,46 @@
-import User from '../model/user.model.js'
 import constant from '../constant/constant.js'
-import asyncHandler from '../error/tryCatch.error.js'
+import asyncHandler from '../error/try-catch.error.js'
+import adminService from '../service/admin.service.js'
 
 
-const createrRequest = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.user._id)
-
-    const createrStatus = user.createrStatus
-    if (createrStatus === constant.createrStatus.rejected) {
-        res.send({ error: "Not eligible for creater account" })
+const getConsumers = asyncHandler(async (req, res) => {
+    const Consumers = await adminService.getUsers({ role: "consumer" })
+    if (!Consumers) {
+        res.send({ error: "No consumer" })
     }
-    else if (createrStatus === constant.createrStatus.pending) {
-        res.send({ message: "Request is under process" })
-    }
-    else if (createrStatus === constant.createrStatus.accpeted) {
-        res.send({ error: "Already Creater" })
-    }
-    else {
-        user.createrStatus = constant.createrStatus.pending
-        await user.save()
-        res.send({ success: "Your request has been recieved" })
-    }
+    res.send(Consumers)
 })
+
+const getCreaters = asyncHandler(async (req, res) => {
+    const users = await adminService.getUsers({ role: "creater" })
+    if (!users) {
+        res.send({ error: "No creater" })
+    }
+    res.send(users)
+})
+
+const getCreaterRequests = asyncHandler(async (req, res) => {
+    const createrRequestedUsers = await adminService.getUsers({ createrStatus: "Pending" })
+    if (!createrRequestedUsers) {
+        res.send({ error: "No user's request is pending" })
+    }
+    res.send(createrRequestedUsers)
+})
+
 const processRequest = asyncHandler(async (req, res) => {
 
-    const requestStatus = req.body.requestStatus;
+    const { userId, requestStatus } = req.body
     let role = constant.role.consumer
     if (requestStatus === constant.requestStatus.accpeted) {
         role = constant.role.creater
     }
 
-    await User.findOneAndUpdate(
-        { _id: req.params['userId'] },
-        {
-            $set: {
-                createrStatus: requestStatus,
-                role: role
-            }
-        }
-    )
-    res.send({ message: "Request is processed," })
+    const user = adminService.updateRequest(userId, requestStatus, role)
+    res.send({ message: "Request is processed,", user })
 
 })
 
-const processAllRequest = asyncHandler(async (req, res) => {
+const processAllRequests = asyncHandler(async (req, res) => {
 
     const requestStatus = req.body.requestStatus;
     let role = constant.role.consumer
@@ -51,16 +48,9 @@ const processAllRequest = asyncHandler(async (req, res) => {
         role = constant.role.creater
     }
 
-    const user = await User.updateMany({ createrStatus: "Pending" }, { $set: { createrStatus: requestStatus, role: role } })
-    if (!user) {
-        res.send({ message: "No requests are in pending list" })
-    }
-    else {
-        res.send({ message: "All Requests Processed" })
-    }
+    const users = adminService.updateAllRequests(constant.createrStatus.pending, requestStatus, role)
+    res.send({ message: "All Requests Processed", users })
 })
 
 
-
-
-export default { createrRequest, processRequest, processAllRequest }
+export default { getConsumers, getCreaters, getCreaterRequests, processRequest, processAllRequests }

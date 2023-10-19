@@ -1,4 +1,4 @@
-import constant from '../../constant/constant.js'
+import constant from '../constant/constant.js'
 
 const routeAccess = (role) => (req, res, next) => {
     try {

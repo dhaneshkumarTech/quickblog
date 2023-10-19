@@ -1,32 +1,46 @@
 import Express from 'express'
-const router = Express.Router()
-import midddleware from '../middleware/auth.midleware.js'
-import access from "../utility/access/route.access.js";
-import userController from '../controller/user.controller.js'
-import adminController from "../controller/admin.controller.js";
-import validator from '../utility/validation/validator.validation.js';
 
-router.route('/get-creater-request')
+import midddleware from '../middleware/auth.midleware.js'
+import adminController from "../controller/admin.controller.js";
+import validator from '../utils/validator.js'
+import access from '../utils//routeAccess.js'
+
+const router = Express.Router()
+
+router.route('/creaters')
     .get(
         midddleware.auth,
         access.isAdmin,
-        userController.getCreaterRequest
+        adminController.getCreaters
     )
-
-router.route('/update-user-status')
-    .patch(
+router.route('/consumers')
+    .get(
         midddleware.auth,
         access.isAdmin,
-        validator.requestStatus,
-        adminController.processAllRequest
+        adminController.getConsumers
+    )
+router.route('/creater-requests')
+    .get(
+        midddleware.auth,
+        access.isAdmin,
+        adminController.getCreaterRequests
     )
 
-router.route('/update-user-status/:userId')
+router.route('/update-creater-status')
     .patch(
         midddleware.auth,
         access.isAdmin,
         validator.requestStatus,
         adminController.processRequest
     )
+
+router.route('/update-all-creaters-status')
+    .patch(
+        midddleware.auth,
+        access.isAdmin,
+        validator.requestData,
+        adminController.processAllRequests
+    )
+
 
 export default router;

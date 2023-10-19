@@ -1,11 +1,13 @@
-//const router = require('express').Router()
 import Express from 'express'
-const router = Express.Router()
+
+import commentRoutes from './comment.routes.js'
+import likeRoutes from './like.routes.js'
 import blogController from '../controller/blog.controller.js'
 import middleware from '../middleware/auth.midleware.js'
-import validator from '../utility/validation/validator.validation.js'
-import access from '../utility/access/route.access.js'
+import validator from '../utils/validator.js'
+import access from '../utils/routeAccess.js'
 
+const router = Express.Router()
 
 router.route('/')
     .post(
@@ -19,18 +21,11 @@ router.route('/')
         blogController.getBlogs
     )
 
-router.route('/:blogId/comment')
-    .post(
-        validator.addComment,
+router.route('/')
+    .delete(
         middleware.auth,
-        blogController.addComment
-    )
-
-router.route('/:blogId/like',)
-    .post(
-        middleware.auth,
-        blogController.likeBlog
-    )
+        blogController.deleteBlog
+    );
 
 router.route('/:userId')
     .get(
@@ -38,10 +33,8 @@ router.route('/:userId')
         blogController.userBlogs
     )
 
-router.route('/:blogId')
-    .delete(
-        middleware.auth,
-        blogController.deleteBlog
-    );
+
+router.use('/:blogId', commentRoutes)
+router.use('/:blogId', likeRoutes)
 
 export default router;

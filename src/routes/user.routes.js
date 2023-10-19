@@ -1,12 +1,11 @@
 import express from 'express'
-const router = express.Router()
+
 import userController from '../controller/user.controller.js'
-import adminController from '../controller/admin.controller.js'
-import validator from '../utility/validation/validator.validation.js'
 import middleware from '../middleware/auth.midleware.js'
-import access from '../utility/access/route.access.js'
+import validator from '../utils/validator.js'
+import access from '../utils//routeAccess.js'
 
-
+const router = express.Router()
 
 router.route('/register')
     .post(
@@ -27,11 +26,11 @@ router.route('/changepassword')
         userController.changePassowrd
     )
 
-router.route('/updaterole')
+router.route('/creater-request')
     .patch(
         middleware.auth,
         access.isConsumer,
-        adminController.createrRequest
+        userController.createrRequest
     )
 
 export default router;

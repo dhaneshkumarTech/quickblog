@@ -1,22 +1,21 @@
-
-import User from '../model/user.model.js'
-import service from '../service/user.service.js'
-import jwtToken from '../utility/token/jwt.token.js'
-import asyncHandler from '../error/tryCatch.error.js'
 import bcryptjs from 'bcryptjs'
+
+import jwtToken from '../utils/jwtToken.js'
+import asyncHandler from '../error/try-catch.error.js'
+import userService from '../service/user.service.js'
 
 
 const register = asyncHandler(async (req, res) => {
     const { name, username, email, password } = req.body
     const hashedPassword = await bcryptjs.hash(password, 8);
-    await service.createUser(name, username, email, hashedPassword);
+    await userService.createUser(name, username, email, hashedPassword);
     res.status(201).json({ message: "User Registered" });
 });
 
 
 const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const user = await userService.getUser({ email })
     if (bcryptjs.compare(password, user.password)) {
         user.token = jwtToken.createToken(user._id, user.role)
         res.status(200).json({ message: 'Auth successful', token: user.token })
@@ -29,22 +28,33 @@ const login = asyncHandler(async (req, res) => {
 const changePassowrd = asyncHandler(async (req, res) => {
     const { currentPassword, newPassword } = req.body
     if (await bcryptjs.compare(currentPassword, req.user.password)) {
-        service.updatePassword(await bcryptjs.hash(newPassword, 8))
+        userService.updatePassword(req.user._id, await bcryptjs.hash(newPassword, 8))
         res.status(200).send({ message: "Password changed successfully." })
     }
     else {
-        res.json({ error: "password does not match" })
+        res.json({ error: "current password does not match" })
     }
 })
 
-const getCreaterRequest = asyncHandler(async (req, res) => {
-    const users = await service.getUser({ createrStatus: "Pending" })
-    if (!users) {
-        res.send({ error: "No user's request is pending" })
+
+const createrRequest = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id)
+
+    const createrStatus = user.createrStatus
+    if (createrStatus === constant.createrStatus.rejected) {
+        res.send({ error: "Not eligible for creater account" })
+    }
+    else if (createrStatus === constant.createrStatus.pending) {
+        res.send({ message: "Request is under process" })
     }
     else {
-        res.send(users)
+        user.createrStatus = constant.createrStatus.pending
+        await user.save()
+        res.send({ success: "Your request has been received" })
     }
 })
 
-export default { register, login, changePassowrd, getCreaterRequest }
+
+
+
+export default { register, login, changePassowrd, createrRequest }
