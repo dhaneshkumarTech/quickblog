@@ -1,5 +1,5 @@
 import constant from '../constant/constant.js'
-import asyncHandler from '../error/try-catch.error.js'
+import asyncHandler from '../error/try-catch.js'
 import adminService from '../service/admin.service.js'
 
 
@@ -35,8 +35,9 @@ const processRequest = asyncHandler(async (req, res) => {
         role = constant.role.creater
     }
 
-    const user = adminService.updateRequest(userId, requestStatus, role)
-    res.send({ message: "Request is processed,", user })
+    await adminService.updateRequest(userId, requestStatus, role)
+    const users = await adminService.getUsers({ createrStatus: "Pending" })
+    res.send({ users: users })
 
 })
 
@@ -48,8 +49,9 @@ const processAllRequests = asyncHandler(async (req, res) => {
         role = constant.role.creater
     }
 
-    const users = adminService.updateAllRequests(constant.createrStatus.pending, requestStatus, role)
-    res.send({ message: "All Requests Processed", users })
+    await adminService.updateAllRequests(constant.createrStatus.pending, requestStatus, role)
+    const users = await adminService.getUsers({ createrStatus: "Pending" })
+    res.send({ users: users })
 })
 
 

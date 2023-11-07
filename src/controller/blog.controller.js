@@ -1,4 +1,4 @@
-import asyncHandler from '../error/try-catch.error.js'
+import asyncHandler from '../error/try-catch.js'
 import blogService from '../service/blog.service.js'
 import commentService from '../service/comment.service.js'
 import likeService from '../service/like.service.js'
@@ -6,73 +6,66 @@ import likeService from '../service/like.service.js'
 const postBlog = asyncHandler(async (req, res) => {
     const { title, content } = req.body
     const userId = req.user._id
-    const blog = await blogService.createBlog(title, content, userId)
-    res.status(200).json({ message: "Blog posted", blog })
+    await blogService.createBlog(title, content, userId)
+    res.status(200).json({ message: "Blog posted" })
 })
 
 const addComment = asyncHandler(async (req, res) => {
+    const userId = req.user._id
+    const content = req.body.content
     const blog = await blogService.findBlogById(req.params['blogId'])
-    if (!blog) {
-        res.json({ error: "Blog Not Found." })
+    const blogId = blog._id
+
+    const userComment = await commentService.getCommentedUser(userId, blogId)
+
+    if (userComment) {
+        res.json({ error: "Already commmented on this blog" })
     }
     else {
-        const userComment = await commentService.getCommentedUser(req.user._id, blog._id)
-        if (userComment) {
-            res.json({ error: "Already commmented on this blog" })
-        }
-        else {
-            const content = re.body.content
-            const userID = req.user._id
-            const blogId = req.params['blogId']
-            const comment = commentService.addComment(content, userID, blogId)
-            res.status(200).send({ message: "Commented sucessfully.", comment })
-        }
+        await commentService.addComment(content, userId, blogId)
+        const allComments = await commentService.getComments(blogId)
+        const comments = allComments.map(({ content, userId }) => ({ content, name: userId.name }))
+        res.status(200).send({ comments })
     }
+
 })
 
 const likeBlog = asyncHandler(async (req, res) => {
-    const blog = await blogService.findBlogById(req.params['blogId'])
-    if (!blog) {
-        res.json({ error: "Blog Not Found." })
+    const blogId = req.params['blogId']
+    const userId = req.user._id
+
+    const userLike = await likeService.getLikedUser(req.user._id, blogId)
+    if (userLike) {
+        await likeService.unLike(userId, blogId)
+        const likes = await likeService.getLikes(blogId)
+        res.status(200).send({ like: "Like", likes })
     }
     else {
-        const userLike = await likeService.getUserLiked(req.user._id, blog._id)
-        if (userLike) {
-            res.json({ error: "Already Liked this blog" })
-        }
-        else {
-            const userId = req.user._id
-            const blogId = req.params['blogId']
-            likeService.addLike(userId, blogId)
-            res.status(200).json({ message: "Blog liked." })
-        }
+
+        await likeService.addLike(userId, blogId)
+        const likes = await likeService.getLikes(blogId)
+        res.status(200).send({ like: "Liked", likes })
     }
-})
+})  
 
 const getBlogs = asyncHandler(async (req, res) => {
-    const allBlogs = await blogService.findAllBlogs()
-    if (!allBlogs || !allBlogs.length) {
-        return res.json({ error: "No blogs available" });
+    const allBlogs = await blogService.findUserBlogs()
+    if (!allBlogs) {
+        res.status(404).send({ error: "Blogs Not Found" });
+        return;
     }
-    const blogs = allBlogs.map(blog => ({
-        author: blog.userId.name,
-        title: blog.title,
-        content: blog.content
-    }));
 
-    res.status(200).json(blogs);
+    res.status(200).json(allBlogs);
 })
 
 
 const userBlogs = asyncHandler(async (req, res) => {
-    const userId = req.params.userId;
-
+    const userId = req.query.userId;
     const userBlogs = await blogService.findUserBlogs(userId)
     if (!userBlogs) {
         res.status(404).json({ error: "Blogs Not Found" });
         return;
     }
-
     res.status(200).json(userBlogs);
 })
 

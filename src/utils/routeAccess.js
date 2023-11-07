@@ -1,18 +1,16 @@
+import asyncHandler from '../error/try-catch.js'
 import constant from '../constant/constant.js'
 
-const routeAccess = (role) => (req, res, next) => {
-    try {
-        if (role === req.user.role) {
-            next()
-        }
-        else {
-            res.status(400).send({ error: "Cannot access the route." })
-        }
+
+const routeAccess = (role) => asyncHandler((req, res, next) => {
+    if (role === req.user.role) {
+        next()
     }
-    catch (err) {
-        res.send(err)
+    else {
+        res.status(400).send({ error: "Cannot access the route." })
     }
-}
+
+})
 
 const isAdmin = routeAccess(constant.role.admin)
 const isCreater = routeAccess(constant.role.creater)

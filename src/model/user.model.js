@@ -26,11 +26,8 @@ const userSchema = new Schema(
             type: String,
             enum: ["No status", "Pending", "Accepted", "Rejected"],
             default: "No status"
-        },
-        token: {
-            type: String
         }
-    }
+    }   
 )
 
 userSchema.pre('save', async function (next) {

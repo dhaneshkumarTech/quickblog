@@ -1,5 +1,4 @@
 import Joi from 'joi'
-import constant from '../constant/constant.js'
 
 const signupSchema = Joi.object().keys(
     {
@@ -21,6 +20,10 @@ const changePasswordSchema = Joi.object({
     newPassword: Joi.string().required()
 })
 
+const userIdSchema = Joi.object(
+    {
+        userId: Joi.string().required()
+    }
+)
 
-
-export default { signupSchema, loginSchema, changePasswordSchema }
+export default { signupSchema, loginSchema, changePasswordSchema, userIdSchema }

@@ -1,7 +1,9 @@
 import express from 'express'
 
+
 import userController from '../controller/user.controller.js'
 import middleware from '../middleware/auth.midleware.js'
+import blogRouter from './blog.routes.js'
 import validator from '../utils/validator.js'
 import access from '../utils//routeAccess.js'
 

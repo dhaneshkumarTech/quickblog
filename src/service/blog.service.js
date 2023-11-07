@@ -9,17 +9,23 @@ const findAllBlogs = async () => {
     return await Blog.find({ isDeleted: false }).populate('userId', 'name')
 }
 const createBlog = async (title, content, userId) => {
-    return await Blog.create(title, content, userId)
+    return await Blog.create({ title, content, userId })
 }
 
 const deleteBlog = async (blogId, userId) => {
     return await Blog.findOneAndUpdate({ blogId, userId, isDeleted: false }, { $set: { isDeleted: true } })
 }
-
 const findUserBlogs = async (userId) => {
+    let matchCondition;
+    if (userId) {
+        matchCondition = { userId: new mongoose.Types.ObjectId(userId), isDeleted: false };
+    }
+    else {
+        matchCondition = { isDeleted: false };
+    }
     return await Blog.aggregate([
         {
-            $match: { userId: new mongoose.Types.ObjectId(userId), isDeleted: false }
+            $match: matchCondition
         },
         {
             $lookup: {
@@ -29,13 +35,20 @@ const findUserBlogs = async (userId) => {
                 as: 'comments'
             }
         },
-
         {
             $lookup: {
                 from: 'likes',
                 localField: '_id',
                 foreignField: 'blogId',
                 as: 'likes'
+            }
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'userId',
+                foreignField: '_id',
+                as: 'user'
             }
         },
         {
@@ -48,6 +61,7 @@ const findUserBlogs = async (userId) => {
         },
         {
             $addFields: {
+                author: { $arrayElemAt: ["$user.name", 0] },
                 comments: {
                     $map: {
                         input: "$comments",
@@ -64,6 +78,7 @@ const findUserBlogs = async (userId) => {
             $project: {
                 title: 1,
                 content: 1,
+                author: 1,
                 comments: 1,
                 likeCount: { $size: '$likes' }
             }
@@ -71,4 +86,4 @@ const findUserBlogs = async (userId) => {
     ]);
 }
 
-export default { findBlogById, findAllBlogs, createBlog, deleteBlog, findUserBlogs }
+export default { findBlogById, findAllBlogs, createBlog, deleteBlog, findUserBlogs };

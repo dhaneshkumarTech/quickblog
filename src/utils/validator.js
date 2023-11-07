@@ -13,14 +13,15 @@ function validation(schema) {
     };
 }
 
-const requestStatus = validation(admin.requestStatusSchema)
-const requestData = validation(admin.requestData)
-
 const signUp = validation(user.signupSchema);
 const login = validation(user.loginSchema);
 const changePassowrd = validation(user.changePasswordSchema);
+const userId = validation(user.userIdSchema)
+
+const singleRequestData = validation(admin.singleRequestSchema)
+const allRequestData = validation(admin.allRequestSchema)
 
 const postBlog = validation(blog.postBlogSchema)
-const addComment = validation(blog.commentSchema)
+const commentContent = validation(blog.commentSchema)
 
-export default { signUp, login, changePassowrd, requestStatus, requestData, postBlog, addComment }
+export default { signUp, login, changePassowrd, singleRequestData, userId, allRequestData, postBlog, commentContent }

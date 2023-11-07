@@ -30,7 +30,7 @@ router.route('/update-creater-status')
     .patch(
         midddleware.auth,
         access.isAdmin,
-        validator.requestStatus,
+        validator.singleRequestData,
         adminController.processRequest
     )
 
@@ -38,9 +38,9 @@ router.route('/update-all-creaters-status')
     .patch(
         midddleware.auth,
         access.isAdmin,
-        validator.requestData,
+        validator.allRequestData,
         adminController.processAllRequests
     )
 
 
-export default router;
+export default router;  

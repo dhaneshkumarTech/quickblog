@@ -27,7 +27,7 @@ router.route('/')
         blogController.deleteBlog
     );
 
-router.route('/:userId')
+router.route('/userblogs')
     .get(
         middleware.auth,
         blogController.userBlogs

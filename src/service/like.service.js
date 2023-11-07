@@ -5,7 +5,16 @@ const getLikedUser = async (userId, blogId) => {
 }
 
 const addLike = async (userId, blogId) => {
-    await Like.create(userId, blogId)
+    return await Like.create({ userId, blogId })
 }
 
-export default { getLikedUser, addLike }
+const unLike = async (userId, blogId) => {
+    return await Like.deleteOne({ userId, blogId })
+}
+
+const getLikes = async (blogId) => {
+    return await Like.find({ blogId }).count()
+}
+
+
+export default { getLikedUser, addLike, unLike, getLikes }

@@ -10,7 +10,7 @@ const router = Express.Router({ mergeParams: true })
 router.route('/comment')
     .post(
         middleware.auth,
-        validator.addComment,
+        validator.commentContent,
         blogController.addComment
     )
 
